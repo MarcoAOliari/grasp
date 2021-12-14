@@ -1,5 +1,6 @@
 import random
 
+# builds the restricted candidate list (RCL)
 def restricted_candidate_list(candidates, costs, cmax, cmin, alpha):
 	rcl = []
 
@@ -9,9 +10,11 @@ def restricted_candidate_list(candidates, costs, cmax, cmin, alpha):
 
 	return rcl
 
+# returns true if the candidate fits in the bag
 def fits(size, weights, actual_weight, candidate):
 	return actual_weight + weights[candidate] <= size
 
+# returns the value of a solution
 def value_of_solution(solution, profits):
 	value = 0
 
@@ -20,6 +23,7 @@ def value_of_solution(solution, profits):
 
 	return value
 
+# construction phase
 def construction(alpha, costs, size, weights):
 	solution = []
 	actual_weight = 0
@@ -45,9 +49,23 @@ def construction(alpha, costs, size, weights):
 
 	return solution
 
-knapsack_capacity = 165
-weights = [23, 31, 29, 44, 53, 38, 63, 85, 89, 82]
-profits = [92, 57, 49, 68, 60, 43, 67, 84, 87, 72]
+def read_files(test):
+	f_size = open(f'input/{test}/size.txt', "r")
+	size = int(f_size.readline())
+
+	weights = []
+	with open(f'input/{test}/weights.txt', "r") as f_weights:
+		for line in f_weights:
+			weights.append(int(line))
+
+	profits = []
+	with open(f'input/{test}/profits.txt', "r") as f_profits:
+		for line in f_profits:
+			profits.append(int(line))
+
+	return (size, weights, profits)
+
+knapsack_capacity, weights, profits = read_files(1)
 costs = [i / j for i, j in zip (weights, profits)]
 
 best_solution = []
@@ -58,11 +76,13 @@ alpha = 0.9
 
 for i in range(STOP):
 	solution = construction(alpha, costs, knapsack_capacity, weights)
-	print(solution)
 	solution_value = value_of_solution(solution, profits)
 
 	if (best_solution_value < solution_value):
 		best_solution = solution
 		best_solution_value = solution_value
 
-	print(f'ITERACAO {i+1}:\n Melhor solução: {best_solution}\n Valor: {best_solution_value}\n\n')
+	print(f'ITERACAO {i+1}:\n Solução testada: {solution}\n Melhor solução: {best_solution}\n Valor: {best_solution_value}\n\n')
+
+best_solution.sort()
+print(f'Solução final: {best_solution}')
