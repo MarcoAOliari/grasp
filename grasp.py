@@ -28,7 +28,6 @@ def construction(alpha, costs, size, weights):
 	solution = []
 	actual_weight = 0
 	candidates = [i for i in range(len(costs))]
-	chosen_candidates = []
 
 	while candidates:
 		cmin = min(costs)
@@ -65,16 +64,16 @@ def read_files(test):
 
 	return (size, weights, profits)
 
-knapsack_capacity, weights, profits = read_files(1)
+knapsack_capacity, weights, profits = read_files(8)
 costs = [i / j for i, j in zip (weights, profits)]
 
 best_solution = []
 best_solution_value = 0
 
-STOP = 10
-alpha = 0.9
+stop = int(input("Número máximo de iterações: "))
+alpha = float(input("Valor de alpha: "))
 
-for i in range(STOP):
+for i in range(stop):
 	solution = construction(alpha, costs, knapsack_capacity, weights)
 	solution_value = value_of_solution(solution, profits)
 
